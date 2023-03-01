@@ -22,6 +22,7 @@ path = "src/lib.rs"
 
 [features]
 default = []
+hyper-windows = ["dep:tokio","dep:hyper", "dep:hyper-rustls", "dep:tokio-stream","dep:tokio-tungstenite", "dep:tokio-tungstenite" ]
 hyper = ["dep:tokio","dep:hyper", "dep:hyper-rustls", "dep:tokio-stream","dep:tokio-tungstenite", "dep:tokio-tungstenite", "dep:signal-hook"]
 axum = ["hyper", "dep:axum", "dep:tower"]
 
@@ -52,9 +53,12 @@ tokio = { version = "1", features = ["bytes","rt-multi-thread","signal","tracing
 tokio-stream = { version = "0.1", optional = true }
 hyper-rustls = { version="0.23", features = ["rustls-native-certs", "http2"], optional = true }
 tokio-tungstenite = { version = "0.18", features = ["rustls-tls-native-roots"], optional = true }
-signal-hook = { version = "0.3", optional = true}
 axum = { version = "0.6", optional = true }
 tower = { version = "0.4", optional = true }
+
+[target.'cfg(not(target_os = "windows"))'.dependencies]
+signal-hook = { version = "0.3", features = ["extended-siginfo"], optional = true}
+signal-hook-tokio = { version = "0.3", features = ["futures-v0_3"], optional = true }
 
 [dev-dependencies]
 cargo-husky = { version = "1", default-features = false, features = ["run-for-all", "prepush-hook", "run-cargo-fmt"] }

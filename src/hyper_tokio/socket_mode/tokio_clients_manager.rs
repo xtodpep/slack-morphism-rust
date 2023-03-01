@@ -168,7 +168,7 @@ impl<H: Send + Sync + Clone + Connect + 'static> SlackSocketModeClientsManager
     async fn await_term_signals(&self) {
         match tokio::signal::ctrl_c().await {
             Ok(()) => debug!("Received ctrl_c signal. Terminating..."),
-            Err(err) => debug!("Unable to listen for ctrl_c signal: {}", err)
+            Err(err) => debug!("Unable to listen for ctrl_c signal: {}", err),
         }
     }
 }
