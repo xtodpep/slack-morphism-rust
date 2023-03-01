@@ -101,7 +101,13 @@ mod token;
 #[cfg(feature = "hyper")]
 pub mod hyper_tokio;
 
+#[cfg(feature = "hyper-windows")]
+pub mod hyper_tokio;
+
 #[cfg(feature = "axum")]
+pub mod axum_support;
+
+#[cfg(feature = "axum-windows")]
 pub mod axum_support;
 
 pub mod prelude;

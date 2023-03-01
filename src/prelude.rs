@@ -12,3 +12,9 @@ pub use crate::hyper_tokio::*;
 
 #[cfg(feature = "axum")]
 pub use crate::axum_support::*;
+
+#[cfg(feature = "hyper-windows")]
+pub use crate::hyper_tokio::*;
+
+#[cfg(feature = "axum-windows")]
+pub use crate::axum_support::*;
