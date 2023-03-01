@@ -7,8 +7,12 @@ use crate::hyper_tokio::socket_mode::tungstenite_wss_client::SlackTungsteniteWss
 use crate::socket_mode::SlackSocketModeWssClientId;
 use futures::future;
 use futures::stream::StreamExt;
+
+#[cfg(not(target_os = "windows"))]
 use signal_hook::consts::TERM_SIGNALS;
+#[cfg(not(target_os = "windows"))]
 use signal_hook::iterator::exfiltrator::WithOrigin;
+#[cfg(not(target_os = "windows"))]
 use signal_hook_tokio::SignalsInfo;
 
 use crate::clients_manager::SlackSocketModeClientsManager;
@@ -151,11 +155,20 @@ impl<H: Send + Sync + Clone + Connect + 'static> SlackSocketModeClientsManager
         }
     }
 
+    #[cfg(not(target_os = "windows"))]
     async fn await_term_signals(&self) {
         let mut signals = SignalsInfo::<WithOrigin>::new(TERM_SIGNALS).unwrap();
 
         if let Some(info) = signals.next().await {
             debug!("Received a signal: {:?}. Terminating...", info);
+        }
+    }
+
+    #[cfg(target_os = "windows")]
+    async fn await_term_signals(&self) {
+        match tokio::signal::ctrl_c().await {
+            Ok(()) => debug!("Received ctrl_c signal. Terminating..."),
+            Err(err) => debug!("Unable to listen for ctrl_c signal: {}", err)
         }
     }
 }
